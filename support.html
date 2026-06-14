@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Support — API Matrix</title>
+  <title data-i18n="title">Support — API Matrix</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
@@ -70,6 +70,42 @@
       position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.025;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       background-size: 200px 200px;
+    }
+
+    .lang-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 3px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.2s forwards;
+    }
+    .lang-toggle button {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 6px 12px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .lang-toggle button.active {
+      background: rgba(0, 212, 255, 0.15);
+      color: var(--accent-cyan);
+    }
+    .lang-toggle button:not(.active):hover {
+      color: var(--text-primary);
     }
 
     main {
@@ -195,6 +231,7 @@
     @media (max-width: 540px) {
       body { padding: 24px 16px; }
       .card { padding: 32px 24px 28px; }
+      .lang-toggle { top: 12px; right: 12px; }
     }
   </style>
 </head>
@@ -205,54 +242,126 @@
   <div class="glow glow--emerald" aria-hidden="true"></div>
   <div class="noise" aria-hidden="true"></div>
 
+  <div class="lang-toggle" role="group" aria-label="Language switch">
+    <button data-lang="en" class="active" aria-label="English">EN</button>
+    <button data-lang="zh" aria-label="中文">中</button>
+  </div>
+
   <main>
     <a href="index.html" class="back-link">
       <span class="arrow-icon" aria-hidden="true">←</span>
-      Back to home
+      <span data-i18n="backHome">Back to home</span>
     </a>
 
     <div class="card">
       <div class="card-header">
-        <h1>Support</h1>
+        <h1 data-i18n="heading">Support</h1>
         <div class="divider-line" aria-hidden="true"></div>
       </div>
 
       <div class="content-block">
-        <h2>Contact</h2>
-        <p>For support, feature requests, or bug reports, please open an issue on our GitHub repository:</p>
+        <h2 data-i18n="contactH">Contact</h2>
+        <p data-i18n="contactP1">For support, feature requests, or bug reports, please open an issue on our GitHub repository:</p>
         <p><a href="https://github.com/HiNesslio/api-matrix/issues" target="_blank">github.com/HiNesslio/api-matrix/issues →</a></p>
-        <p style="color: rgba(138,138,158,0.6); font-size: 13px; margin-top: 4px;">We typically respond within 48 hours.</p>
+        <p style="color: rgba(138,138,158,0.6); font-size: 13px; margin-top: 4px;" data-i18n="contactP2">We typically respond within 48 hours.</p>
       </div>
 
       <div class="content-block">
-        <h2>Frequently Asked Questions</h2>
+        <h2 data-i18n="faqH">Frequently Asked Questions</h2>
 
         <div class="faq-item">
-          <h3>Where are my API keys stored?</h3>
-          <p>All API keys are stored locally on your device using iOS Keychain / Android Keystore. No data is sent to any server.</p>
+          <h3 data-i18n="faq1q">Where are my API keys stored?</h3>
+          <p data-i18n="faq1a">All API keys are stored locally on your device using iOS Keychain / Android Keystore. No data is sent to any server.</p>
         </div>
 
         <div class="faq-item">
-          <h3>How do I delete my data?</h3>
-          <p>Simply delete the app from your device. All data is removed since nothing is stored externally.</p>
+          <h3 data-i18n="faq2q">How do I delete my data?</h3>
+          <p data-i18n="faq2a">Simply delete the app from your device. All data is removed since nothing is stored externally.</p>
         </div>
 
         <div class="faq-item">
-          <h3>Does the app collect analytics?</h3>
-          <p>No. API Matrix has no analytics, crash reporting, or telemetry of any kind.</p>
+          <h3 data-i18n="faq3q">Does the app collect analytics?</h3>
+          <p data-i18n="faq3a">No. API Matrix has no analytics, crash reporting, or telemetry of any kind.</p>
         </div>
 
         <div class="faq-item">
-          <h3>How do I back up my API keys?</h3>
-          <p>Go to <strong>Settings → Data Management → Export Backup</strong>. The backup JSON is copied to your clipboard.</p>
+          <h3 data-i18n="faq4q">How do I back up my API keys?</h3>
+          <p><span data-i18n="faq4a">Go to</span> <strong>Settings → Data Management → Export Backup</strong>. <span data-i18n="faq4b">The backup JSON is copied to your clipboard.</span></p>
         </div>
       </div>
     </div>
 
     <footer>
-      &copy; 2026 API Matrix. All rights reserved.
+      <span data-i18n="footer">&copy; 2026 API Matrix. All rights reserved.</span>
     </footer>
   </main>
+
+  <script>
+    const i18n = {
+      en: {
+        title: 'Support — API Matrix',
+        backHome: 'Back to home',
+        heading: 'Support',
+        contactH: 'Contact',
+        contactP1: 'For support, feature requests, or bug reports, please open an issue on our GitHub repository:',
+        contactP2: 'We typically respond within 48 hours.',
+        faqH: 'Frequently Asked Questions',
+        faq1q: 'Where are my API keys stored?',
+        faq1a: 'All API keys are stored locally on your device using iOS Keychain / Android Keystore. No data is sent to any server.',
+        faq2q: 'How do I delete my data?',
+        faq2a: 'Simply delete the app from your device. All data is removed since nothing is stored externally.',
+        faq3q: 'Does the app collect analytics?',
+        faq3a: 'No. API Matrix has no analytics, crash reporting, or telemetry of any kind.',
+        faq4q: 'How do I back up my API keys?',
+        faq4a: 'Go to',
+        faq4b: 'The backup JSON is copied to your clipboard.',
+        footer: '\u00A9 2026 API Matrix. All rights reserved.'
+      },
+      zh: {
+        title: '支援 — API Matrix',
+        backHome: '返回首頁',
+        heading: '支援',
+        contactH: '聯絡我們',
+        contactP1: '如需支援、功能請求或回報錯誤，請在我們的 GitHub 儲存庫中開立 Issue：',
+        contactP2: '我們通常會在 48 小時內回覆。',
+        faqH: '常見問題',
+        faq1q: '我的 API 金鑰存放在哪裡？',
+        faq1a: '所有 API 金鑰都儲存在您裝置本機的 iOS Keychain / Android Keystore 中，不會傳送到任何伺服器。',
+        faq2q: '如何刪除我的資料？',
+        faq2a: '直接從裝置上刪除應用程式即可。由於所有資料僅儲存在本機，刪除後即完全移除。',
+        faq3q: '應用程式會收集分析資料嗎？',
+        faq3a: '不會。API Matrix 沒有任何分析、崩潰回報或任何形式的遙測功能。',
+        faq4q: '如何備份我的 API 金鑰？',
+        faq4a: '前往',
+        faq4b: '備份 JSON 將會複製到您的剪貼簿。',
+        footer: '\u00A9 2026 API Matrix. 版權所有。'
+      }
+    };
+
+    let currentLang = localStorage.getItem('apiMatrixLang') || 'en';
+
+    function applyLang(lang) {
+      document.documentElement.lang = lang;
+      const els = document.querySelectorAll('[data-i18n]');
+      els.forEach(el => {
+        const key = el.dataset.i18n;
+        if (i18n[lang] && i18n[lang][key] !== undefined) {
+          el.innerHTML = i18n[lang][key];
+        }
+      });
+      document.querySelectorAll('.lang-toggle button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      localStorage.setItem('apiMatrixLang', lang);
+      currentLang = lang;
+    }
+
+    document.querySelectorAll('.lang-toggle button').forEach(btn => {
+      btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+    });
+
+    applyLang(currentLang);
+  </script>
 
 </body>
 </html>

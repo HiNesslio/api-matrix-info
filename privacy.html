@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Policy — API Matrix</title>
+  <title data-i18n="title">Privacy Policy — API Matrix</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
@@ -70,6 +70,42 @@
       position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.025;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       background-size: 200px 200px;
+    }
+
+    .lang-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 3px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.2s forwards;
+    }
+    .lang-toggle button {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 6px 12px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .lang-toggle button.active {
+      background: rgba(0, 212, 255, 0.15);
+      color: var(--accent-cyan);
+    }
+    .lang-toggle button:not(.active):hover {
+      color: var(--text-primary);
     }
 
     main {
@@ -185,6 +221,7 @@
     @media (max-width: 540px) {
       body { padding: 24px 16px; }
       .card { padding: 32px 24px 28px; }
+      .lang-toggle { top: 12px; right: 12px; }
     }
   </style>
 </head>
@@ -195,59 +232,137 @@
   <div class="glow glow--emerald" aria-hidden="true"></div>
   <div class="noise" aria-hidden="true"></div>
 
+  <div class="lang-toggle" role="group" aria-label="Language switch">
+    <button data-lang="en" class="active" aria-label="English">EN</button>
+    <button data-lang="zh" aria-label="中文">中</button>
+  </div>
+
   <main>
     <a href="index.html" class="back-link">
       <span class="arrow-icon" aria-hidden="true">←</span>
-      Back to home
+      <span data-i18n="backHome">Back to home</span>
     </a>
 
     <div class="card">
       <div class="card-header">
-        <h1>Privacy Policy</h1>
-        <p class="meta">Last updated: June 13, 2026</p>
+        <h1 data-i18n="heading">Privacy Policy</h1>
+        <p class="meta" data-i18n="lastUpdated">Last updated: June 13, 2026</p>
         <div class="divider-line" aria-hidden="true"></div>
       </div>
 
       <div class="content-block">
-        <h2>Data Storage</h2>
-        <p>API Matrix stores all user data exclusively on your device using the iOS Keychain and Android Keystore. No data is transmitted to external servers, cloud services, or third parties.</p>
+        <h2 data-i18n="s1h">Data Storage</h2>
+        <p data-i18n="s1p">API Matrix stores all user data exclusively on your device using the iOS Keychain and Android Keystore. No data is transmitted to external servers, cloud services, or third parties.</p>
       </div>
 
       <div class="content-block">
-        <h2>Information We Collect</h2>
-        <p><strong>We do not collect any personal information.</strong> The app does not have analytics, crash reporting, or any form of telemetry. Your API keys, usage data, and preferences remain solely on your device.</p>
+        <h2 data-i18n="s2h">Information We Collect</h2>
+        <p data-i18n="s2p"><strong>We do not collect any personal information.</strong> The app does not have analytics, crash reporting, or any form of telemetry. Your API keys, usage data, and preferences remain solely on your device.</p>
       </div>
 
       <div class="content-block">
-        <h2>Advertising</h2>
-        <p>API Matrix displays banner ads via Google AdMob using <strong>non-personalized ads only</strong>. No advertising ID (IDFA) is used, and no user profiling or behavioral targeting is performed. AdMob may serve contextual ads based on general location (country level) and app content.</p>
+        <h2 data-i18n="s3h">Advertising</h2>
+        <p data-i18n="s3p">API Matrix displays banner ads via Google AdMob using <strong>non-personalized ads only</strong>. No advertising ID (IDFA) is used, and no user profiling or behavioral targeting is performed. AdMob may serve contextual ads based on general location (country level) and app content.</p>
       </div>
 
       <div class="content-block">
-        <h2>Third-Party Services</h2>
-        <p>The app communicates directly with third-party AI provider APIs only when you explicitly perform a ping test or fetch usage data. These requests are made using your own API keys and are not intercepted or logged by us.</p>
+        <h2 data-i18n="s4h">Third-Party Services</h2>
+        <p data-i18n="s4p">The app communicates directly with third-party AI provider APIs only when you explicitly perform a ping test or fetch usage data. These requests are made using your own API keys and are not intercepted or logged by us.</p>
       </div>
 
       <div class="content-block">
-        <h2>Data Deletion</h2>
-        <p>Since all data is stored locally, you can delete all data by deleting the app from your device. No data exists on any external server that would require a separate deletion request.</p>
+        <h2 data-i18n="s5h">Data Deletion</h2>
+        <p data-i18n="s5p">Since all data is stored locally, you can delete all data by deleting the app from your device. No data exists on any external server that would require a separate deletion request.</p>
       </div>
 
       <div class="content-block">
-        <h2>Changes to This Policy</h2>
-        <p>We may update this privacy policy from time to time. Changes will be posted on this page.</p>
+        <h2 data-i18n="s6h">Changes to This Policy</h2>
+        <p data-i18n="s6p">We may update this privacy policy from time to time. Changes will be posted on this page.</p>
       </div>
 
       <div class="content-block">
-        <h2>Contact</h2>
-        <p>If you have questions about this privacy policy, please <a href="support.html">contact us</a>.</p>
+        <h2 data-i18n="s7h">Contact</h2>
+        <p><span data-i18n="s7p">If you have questions about this privacy policy, please</span> <a href="support.html" data-i18n="s7a">contact us</a>.</p>
       </div>
     </div>
 
     <footer>
-      &copy; 2026 API Matrix. All rights reserved.
+      <span data-i18n="footer">&copy; 2026 API Matrix. All rights reserved.</span>
     </footer>
   </main>
+
+  <script>
+    const i18n = {
+      en: {
+        title: 'Privacy Policy — API Matrix',
+        backHome: 'Back to home',
+        heading: 'Privacy Policy',
+        lastUpdated: 'Last updated: June 13, 2026',
+        s1h: 'Data Storage',
+        s1p: 'API Matrix stores all user data exclusively on your device using the iOS Keychain and Android Keystore. No data is transmitted to external servers, cloud services, or third parties.',
+        s2h: 'Information We Collect',
+        s2p: '<strong>We do not collect any personal information.</strong> The app does not have analytics, crash reporting, or any form of telemetry. Your API keys, usage data, and preferences remain solely on your device.',
+        s3h: 'Advertising',
+        s3p: 'API Matrix displays banner ads via Google AdMob using <strong>non-personalized ads only</strong>. No advertising ID (IDFA) is used, and no user profiling or behavioral targeting is performed. AdMob may serve contextual ads based on general location (country level) and app content.',
+        s4h: 'Third-Party Services',
+        s4p: 'The app communicates directly with third-party AI provider APIs only when you explicitly perform a ping test or fetch usage data. These requests are made using your own API keys and are not intercepted or logged by us.',
+        s5h: 'Data Deletion',
+        s5p: 'Since all data is stored locally, you can delete all data by deleting the app from your device. No data exists on any external server that would require a separate deletion request.',
+        s6h: 'Changes to This Policy',
+        s6p: 'We may update this privacy policy from time to time. Changes will be posted on this page.',
+        s7h: 'Contact',
+        s7p: 'If you have questions about this privacy policy, please',
+        s7a: 'contact us',
+        footer: '\u00A9 2026 API Matrix. All rights reserved.'
+      },
+      zh: {
+        title: '隱私權政策 — API Matrix',
+        backHome: '返回首頁',
+        heading: '隱私權政策',
+        lastUpdated: '最後更新：2026 年 6 月 13 日',
+        s1h: '資料儲存',
+        s1p: 'API Matrix 僅將所有使用者資料儲存在您的裝置上，使用 iOS Keychain 與 Android Keystore。沒有任何資料會傳輸到外部伺服器、雲端服務或第三方。',
+        s2h: '我們收集的資訊',
+        s2p: '<strong>我們不收集任何個人資訊。</strong>本應用程式沒有分析、崩潰回報或任何形式的遙測功能。您的 API 金鑰、使用數據與偏好設定完全保留在您的裝置上。',
+        s3h: '廣告',
+        s3p: 'API Matrix 透過 Google AdMob 顯示橫幅廣告，<strong>僅使用非個人化廣告</strong>。不使用廣告識別碼 (IDFA)，不進行使用者分析或行為定向投放。AdMob 可能根據一般位置（國家層級）與應用程式內容投放情境廣告。',
+        s4h: '第三方服務',
+        s4p: '僅當您明確執行 Ping 測試或擷取使用數據時，應用程式才會直接與第三方 AI 供應商的 API 通訊。這些請求使用您自己的 API 金鑰發出，我們不會攔截或記錄。',
+        s5h: '資料刪除',
+        s5p: '由於所有資料均儲存於本地，您只需從裝置上刪除應用程式即可刪除所有資料。沒有任何資料存在於外部伺服器上，無需另行提出刪除請求。',
+        s6h: '本政策的變更',
+        s6p: '我們可能會不時更新本隱私權政策。變更內容將公佈在此頁面上。',
+        s7h: '聯絡我們',
+        s7p: '如果您對本隱私權政策有任何疑問，請',
+        s7a: '與我們聯絡',
+        footer: '\u00A9 2026 API Matrix. 版權所有。'
+      }
+    };
+
+    let currentLang = localStorage.getItem('apiMatrixLang') || 'en';
+
+    function applyLang(lang) {
+      document.documentElement.lang = lang;
+      const els = document.querySelectorAll('[data-i18n]');
+      els.forEach(el => {
+        const key = el.dataset.i18n;
+        if (i18n[lang] && i18n[lang][key] !== undefined) {
+          el.innerHTML = i18n[lang][key];
+        }
+      });
+      document.querySelectorAll('.lang-toggle button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      localStorage.setItem('apiMatrixLang', lang);
+      currentLang = lang;
+    }
+
+    document.querySelectorAll('.lang-toggle button').forEach(btn => {
+      btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+    });
+
+    applyLang(currentLang);
+  </script>
 
 </body>
 </html>
