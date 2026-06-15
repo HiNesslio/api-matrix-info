@@ -159,21 +159,15 @@
       position: relative;
       background: var(--bg);
     }
-    .showcase-inner {
-      display: flex;
-      align-items: flex-start;
-      gap: 80px;
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 40px;
-      position: relative;
-    }
     .showcase-phone {
-      flex: 0 0 380px;
-      position: sticky;
+      position: fixed;
+      left: 50%;
       top: 50%;
-      transform: translateY(-50%);
+      transform: translate(-50%, -50%) scale(0.7);
+      width: 380px;
+      z-index: 3;
       opacity: 0;
+      pointer-events: none;
     }
     .showcase-phone svg {
       display: block;
@@ -182,17 +176,16 @@
     }
 
     .showcase-text {
-      flex: 1 1 0;
-      min-width: 420px;
-      padding: 60vh 0;
+      max-width: 580px;
+      margin: 0 auto;
+      padding: 80vh 0 20vh;
     }
     .text-step {
-      min-height: 80vh;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       padding: 40px 0;
-      max-width: 420px;
     }
     .text-step:last-child { min-height: 60vh; }
     .text-step .step-num {
@@ -249,17 +242,17 @@
     }
 
     @media (max-width: 1024px) {
-      .showcase-inner { flex-direction: column; align-items: center; gap: 0; padding: 0 24px; }
       .showcase-phone {
         position: relative;
+        left: auto;
         top: auto;
         transform: none;
         width: 300px;
         margin: 60px auto 0;
         opacity: 1;
       }
-      .showcase-text { padding: 40px 0; }
-      .text-step { min-height: auto; padding: 60px 0; max-width: 100%; }
+      .showcase-text { padding: 40px 24px; }
+      .text-step { min-height: auto; padding: 60px 0; }
       .text-step:last-child { min-height: auto; }
       .mark { display: none; }
     }
@@ -340,10 +333,8 @@
 
   <!-- ═══ IPHONE SHOWCASE ═══ -->
   <section class="showcase" id="showcase">
-    <div class="showcase-inner">
 
-      <!-- Phone (sticky) -->
-      <div class="showcase-phone" id="phoneSticky">
+      <div class="showcase-phone">
         <svg viewBox="0 0 400 832" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- body shadow -->
           <rect x="18" y="8" width="364" height="816" rx="54" fill="rgba(0,0,0,0.04)"/>
@@ -394,7 +385,6 @@
         </svg>
       </div>
 
-      <!-- Text blocks -->
       <div class="showcase-text">
         <div class="text-step" data-step="0">
           <span class="step-icon">&#x1F511;</span>
@@ -424,8 +414,6 @@
           <p data-i18n="s4Desc">Track token consumption and spending across providers. Stay informed, never overshoot your budget.</p>
         </div>
       </div>
-
-    </div>
   </section>
 
   <div class="footer">
@@ -515,7 +503,6 @@
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const phoneWrap = document.querySelector('.showcase-phone');
     const screens = gsap.utils.toArray('.scr');
-    const total = screens.length;
 
     let showcaseInit = false;
 
@@ -536,8 +523,8 @@
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: '#showcase',
-          start: 'center center',
-          end: '+=500%',
+          start: 'top top',
+          end: '+=450%',
           pin: true,
           scrub: 1,
           invalidateOnRefresh: true,
@@ -546,15 +533,14 @@
         defaults: { ease: 'none' },
       });
 
-      const phDur = 0.1;
-      const crossDur = (1 - phDur * 2) / (total - 1);
-
-      tl.fromTo(phoneWrap, { opacity: 0 }, { opacity: 1, duration: phDur });
-      for (let i = 1; i < total; i++) {
-        tl.to(screens[i - 1], { opacity: 0, duration: crossDur })
-          .to(screens[i], { opacity: 1, duration: 0 }, '<');
-      }
-      tl.to(phoneWrap, { opacity: 0, duration: phDur });
+      tl.fromTo(phoneWrap, { opacity: 0 }, { opacity: 1, duration: 0.12 });
+      tl.to(screens[0], { opacity: 0, duration: 0.25 })
+        .to(screens[1], { opacity: 1, duration: 0 }, '<');
+      tl.to(screens[1], { opacity: 0, duration: 0.25 })
+        .to(screens[2], { opacity: 1, duration: 0 }, '<');
+      tl.to(screens[2], { opacity: 0, duration: 0.25 })
+        .to(screens[3], { opacity: 1, duration: 0 }, '<');
+      tl.to(phoneWrap, { opacity: 0, duration: 0.13 });
     }
 
     window.addEventListener('load', () => {
