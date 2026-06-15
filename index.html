@@ -526,7 +526,7 @@
         scrollTrigger: {
           trigger: '#showcase',
           start: 'top bottom',
-          end: '+=350%',
+          end: '+=400%',
           pin: true,
           scrub: 1,
           invalidateOnRefresh: true,
@@ -534,14 +534,16 @@
         defaults: { ease: 'none' },
       });
 
-      tl.fromTo(phone, { opacity: 0 }, { opacity: 1, duration: 0.15 });
-      tl.to(screens[0], { opacity: 0, duration: 0.25 })
+      tl.to({}, { duration: 0.05 });
+      tl.fromTo(phone, { opacity: 0 }, { opacity: 1, duration: 0.12 });
+      tl.to(screens[0], { opacity: 0, duration: 0.22 })
         .to(screens[1], { opacity: 1, duration: 0 }, '<');
-      tl.to(screens[1], { opacity: 0, duration: 0.25 })
+      tl.to(screens[1], { opacity: 0, duration: 0.22 })
         .to(screens[2], { opacity: 1, duration: 0 }, '<');
-      tl.to(screens[2], { opacity: 0, duration: 0.25 })
+      tl.to(screens[2], { opacity: 0, duration: 0.22 })
         .to(screens[3], { opacity: 1, duration: 0 }, '<');
-      tl.to(phone, { opacity: 0, duration: 0.15 });
+      tl.to({}, { duration: 0.05 });
+      tl.to(phone, { opacity: 0, duration: 0.12 });
     }
 
     window.addEventListener('load', () => ScrollTrigger.refresh());
