@@ -184,16 +184,16 @@
     .showcase-text {
       max-width: 580px;
       margin: 0 auto;
-      padding: 80vh 0 20vh;
+      padding: 60vh 0 10vh;
     }
     .text-step {
-      min-height: 100vh;
+      min-height: 60vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 40px 0;
+      padding: 24px 0;
     }
-    .text-step:last-child { min-height: 60vh; }
+    .text-step:last-child { min-height: 40vh; }
     .text-step .step-num {
       font-family: var(--font-mono);
       font-size: 11px;
@@ -265,7 +265,7 @@
         opacity: 1;
       }
       .showcase-text { padding: 40px 24px; }
-      .text-step { min-height: auto; padding: 60px 0; }
+      .text-step { min-height: auto; padding: 40px 0; }
       .text-step:last-child { min-height: auto; }
       .mark { display: none; }
     }
@@ -534,8 +534,8 @@
         defaults: { ease: 'none' },
       });
 
-      tl.to({}, { duration: 0.05 });
-      tl.fromTo(phone, { opacity: 0 }, { opacity: 1, duration: 0.12 });
+      tl.to({}, { duration: 0.10 });
+      tl.fromTo(phone, { opacity: 0 }, { opacity: 1, duration: 0.10 });
       tl.to(screens[0], { opacity: 0, duration: 0.22 })
         .to(screens[1], { opacity: 1, duration: 0 }, '<');
       tl.to(screens[1], { opacity: 0, duration: 0.22 })
@@ -543,7 +543,7 @@
       tl.to(screens[2], { opacity: 0, duration: 0.22 })
         .to(screens[3], { opacity: 1, duration: 0 }, '<');
       tl.to({}, { duration: 0.05 });
-      tl.to(phone, { opacity: 0, duration: 0.12 });
+      tl.to(phone, { opacity: 0, duration: 0.09 });
     }
 
     window.addEventListener('load', () => ScrollTrigger.refresh());
