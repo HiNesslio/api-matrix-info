@@ -173,6 +173,7 @@
       position: sticky;
       top: 50%;
       transform: translateY(-50%);
+      opacity: 0;
     }
     .showcase-phone svg {
       display: block;
@@ -255,6 +256,7 @@
         transform: none;
         width: 300px;
         margin: 60px auto 0;
+        opacity: 1;
       }
       .showcase-text { padding: 40px 0; }
       .text-step { min-height: auto; padding: 60px 0; max-width: 100%; }
@@ -511,8 +513,8 @@
     gsap.registerPlugin(ScrollTrigger);
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const phoneWrap = document.querySelector('.showcase-phone');
     const screens = gsap.utils.toArray('.scr');
-    const steps = gsap.utils.toArray('.text-step');
     const total = screens.length;
 
     let showcaseInit = false;
@@ -520,33 +522,39 @@
     function initShowcase() {
       if (showcaseInit) return;
       if (window.innerWidth <= 1024 || !screens.length) return;
-      if (reduceMotion) {
-        gsap.set(screens, { opacity: 1 });
-        return;
-      }
 
       showcaseInit = true;
 
       gsap.set(screens, { opacity: 0 });
       gsap.set(screens[0], { opacity: 1 });
 
+      if (reduceMotion) {
+        gsap.set(phoneWrap, { opacity: 1 });
+        return;
+      }
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: '#showcase',
-          start: 'top top',
-          end: '+=400%',
+          start: 'center center',
+          end: '+=500%',
           pin: true,
           scrub: 1,
           invalidateOnRefresh: true,
+          anticipatePin: 1,
         },
-        defaults: { ease: 'none', duration: 1 / total },
+        defaults: { ease: 'none' },
       });
 
-      tl.to({}, { duration: 0.15 });
+      const phDur = 0.1;
+      const crossDur = (1 - phDur * 2) / (total - 1);
+
+      tl.fromTo(phoneWrap, { opacity: 0 }, { opacity: 1, duration: phDur });
       for (let i = 1; i < total; i++) {
-        tl.to(screens[i - 1], { opacity: 0 })
-          .to(screens[i], { opacity: 1 }, '<');
+        tl.to(screens[i - 1], { opacity: 0, duration: crossDur })
+          .to(screens[i], { opacity: 1, duration: 0 }, '<');
       }
+      tl.to(phoneWrap, { opacity: 0, duration: phDur });
     }
 
     window.addEventListener('load', () => {
