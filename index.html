@@ -7,6 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js">
+  </script>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -26,19 +30,14 @@
       --font-mono: 'JetBrains Mono', monospace;
     }
 
-    html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-behavior: smooth; }
 
     body {
       font-family: var(--font-body);
       background: var(--bg);
       color: var(--text-primary);
-      min-height: 100dvh;
-      display: flex;
-      align-items: center;
-      position: relative;
     }
 
-    /* decorative M mark */
     .mark {
       position: fixed;
       right: -40px;
@@ -55,6 +54,15 @@
       letter-spacing: -0.06em;
     }
 
+    /* ── Hero ── */
+    .hero {
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
     .container {
       position: relative;
       z-index: 1;
@@ -65,9 +73,7 @@
       opacity: 0;
       animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
     }
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
+    @keyframes fadeIn { to { opacity: 1; } }
 
     .lang-toggle {
       display: flex;
@@ -82,171 +88,201 @@
       animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
     }
     .lang-toggle button {
-      background: none;
-      border: none;
+      background: none; border: none;
       color: var(--text-tertiary);
+      font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.05em; padding: 5px 10px; border-radius: 6px;
+      cursor: pointer; transition: all 0.2s ease;
+    }
+    .lang-toggle button.active { background: var(--accent-light); color: var(--accent); }
+    .lang-toggle button:not(.active):hover { color: var(--text-primary); }
+
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 24px;
+    }
+    .hero-eyebrow .diamond {
+      width: 8px; height: 8px; background: var(--accent);
+      transform: rotate(45deg); border-radius: 1.5px; flex-shrink: 0;
+    }
+    .hero-eyebrow .label {
+      font-family: var(--font-mono); font-size: 10.5px; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-tertiary);
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 7vw, 60px);
+      font-weight: 800; line-height: 1.05; letter-spacing: -0.03em;
+      color: var(--text-primary); margin-bottom: 20px;
+    }
+    .hero h1 .accent { color: var(--accent); }
+
+    .hero-divider {
+      width: 36px; height: 2px; background: var(--accent);
+      border-radius: 2px; margin-bottom: 24px;
+    }
+
+    .hero-tagline {
+      font-size: 16px; line-height: 1.75; color: var(--text-secondary);
+      max-width: 440px; margin-bottom: 40px;
+    }
+
+    .hero-links {
+      display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+    }
+    .hero-links a {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 20px; border-radius: var(--radius);
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text-primary); text-decoration: none;
+      font-size: 14px; font-weight: 500; transition: all 0.25s ease;
+    }
+    .hero-links a:hover { border-color: var(--accent-border); background: var(--accent-light); }
+    .hero-links a:active { transform: scale(0.97); }
+    .hero-links a .arrow { font-size: 16px; color: var(--text-tertiary); transition: transform 0.25s ease; }
+    .hero-links a:hover .arrow { transform: translateX(3px); color: var(--accent); }
+
+    .hero-badges {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 36px;
+    }
+    .hero-badges .badge {
+      font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+      letter-spacing: 0.03em; padding: 6px 12px; border-radius: 20px;
+      background: var(--surface); border: 1px solid var(--border); color: var(--text-secondary);
+    }
+    .hero-badges .badge--accent { background: var(--accent-light); border-color: var(--accent-border); color: var(--accent); }
+
+    /* ── Showcase ── */
+    .showcase {
+      position: relative;
+      background: var(--bg);
+    }
+    .showcase-inner {
+      display: flex;
+      align-items: flex-start;
+      gap: 80px;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 40px;
+      position: relative;
+    }
+    .showcase-phone {
+      flex-shrink: 0;
+      width: 380px;
+      position: sticky;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+    .showcase-phone svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .showcase-phone .screen-wrap {
+      position: absolute;
+      overflow: hidden;
+      border-radius: 34px;
+    }
+    .showcase-phone .screen-wrap img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      will-change: opacity;
+    }
+
+    .showcase-text {
+      flex: 1;
+      min-width: 0;
+      padding: 60vh 0;
+      position: relative;
+      z-index: 1;
+    }
+    .text-step {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 0;
+      max-width: 420px;
+    }
+    .text-step:last-child { min-height: 60vh; }
+    .text-step .step-num {
       font-family: var(--font-mono);
       font-size: 11px;
       font-weight: 500;
-      letter-spacing: 0.05em;
-      padding: 5px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .lang-toggle button.active {
-      background: var(--accent-light);
+      letter-spacing: 0.08em;
       color: var(--accent);
+      margin-bottom: 16px;
     }
-    .lang-toggle button:not(.active):hover {
-      color: var(--text-primary);
+    .text-step .step-icon {
+      font-size: 28px;
+      margin-bottom: 16px;
+      display: block;
     }
-
-    .eyebrow {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 24px;
-      opacity: 0;
-      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
-    }
-    .eyebrow-diamond {
-      width: 8px;
-      height: 8px;
-      background: var(--accent);
-      transform: rotate(45deg);
-      border-radius: 1.5px;
-      flex-shrink: 0;
-    }
-    .eyebrow-label {
-      font-family: var(--font-mono);
-      font-size: 10.5px;
-      font-weight: 500;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-    }
-
-    h1 {
+    .text-step h2 {
       font-family: var(--font-display);
-      font-size: clamp(40px, 7vw, 60px);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.03em;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
       color: var(--text-primary);
-      margin-bottom: 20px;
-      opacity: 0;
-      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+      margin-bottom: 14px;
     }
-    h1 .accent {
-      color: var(--accent);
-    }
-
-    .divider {
-      width: 36px;
-      height: 2px;
-      background: var(--accent);
-      border-radius: 2px;
-      margin-bottom: 24px;
-      opacity: 0;
-      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
-    }
-
-    .tagline {
-      font-size: 16px;
+    .text-step p {
+      font-size: 15px;
       line-height: 1.75;
       color: var(--text-secondary);
-      max-width: 440px;
-      margin-bottom: 40px;
-      opacity: 0;
-      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
     }
 
-    .links {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 36px;
-      opacity: 0;
-      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards;
-    }
-    .links a {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 20px;
-      border-radius: var(--radius);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text-primary);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      font-family: var(--font-body);
-      transition: all 0.25s ease;
-    }
-    .links a:hover {
-      border-color: var(--accent-border);
-      background: var(--accent-light);
-    }
-    .links a:active {
-      transform: scale(0.97);
-    }
-    .links a .arrow {
-      font-size: 16px;
-      color: var(--text-tertiary);
-      transition: transform 0.25s ease;
-    }
-    .links a:hover .arrow {
-      transform: translateX(3px);
-      color: var(--accent);
-    }
-
-    .badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      opacity: 0;
-      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
-    }
-    .badge {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.03em;
-      padding: 6px 12px;
-      border-radius: 20px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-    }
-    .badge--accent {
-      background: var(--accent-light);
-      border-color: var(--accent-border);
-      color: var(--accent);
-    }
-
-    footer {
-      margin-top: 56px;
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      padding: 40px 24px;
       font-size: 12px;
       color: var(--text-tertiary);
-      opacity: 0;
-      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards;
+      border-top: 1px solid var(--border);
     }
 
+    /* ── Hero stagger animations ── */
+    .hero .stagger { opacity: 0; }
+    @media (prefers-reduced-motion: no-preference) {
+      .hero .stagger { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+      .hero .stagger-1 { animation-delay: 0.1s; }
+      .hero .stagger-2 { animation-delay: 0.2s; }
+      .hero .stagger-3 { animation-delay: 0.3s; }
+      .hero .stagger-4 { animation-delay: 0.4s; }
+      .hero .stagger-5 { animation-delay: 0.5s; }
+      .hero .stagger-6 { animation-delay: 0.6s; }
+    }
     @keyframes slideUp {
       from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 768px) {
-      body { align-items: flex-start; padding-top: 48px; }
-      .container { margin: 0 auto; padding: 0 24px; }
+    @media (max-width: 1024px) {
+      .showcase-inner { flex-direction: column; align-items: center; gap: 0; padding: 0 24px; }
+      .showcase-phone {
+        position: relative;
+        top: auto;
+        transform: none;
+        width: 300px;
+        margin: 60px auto 0;
+      }
+      .showcase-text { padding: 40px 0; }
+      .text-step { min-height: auto; padding: 60px 0; max-width: 100%; }
+      .text-step:last-child { min-height: auto; }
       .mark { display: none; }
-      .lang-toggle { margin-bottom: 40px; }
-      h1 { font-size: 34px; }
-      .tagline { font-size: 15px; }
-      footer { margin-top: 40px; }
+    }
+    @media (max-width: 768px) {
+      .container { margin: 0 auto; padding: 0 24px; }
+      .hero h1 { font-size: 34px; }
+      .showcase-phone { width: 250px; }
+    }
+    @media (max-width: 540px) {
+      .showcase-phone { width: 220px; }
     }
 
     @media (prefers-color-scheme: dark) {
@@ -263,12 +299,8 @@
       }
       .mark { color: rgba(122, 159, 212, 0.04); }
     }
-
     @media (prefers-reduced-motion: reduce) {
-      .container, .lang-toggle, .eyebrow, h1, .divider, .tagline, .links, .badges, footer {
-        opacity: 1;
-        animation: none;
-      }
+      .hero .stagger { opacity: 1; animation: none; }
     }
   </style>
 </head>
@@ -276,50 +308,149 @@
 
   <div class="mark" aria-hidden="true">M</div>
 
-  <div class="container">
-    <div class="lang-toggle" role="group" aria-label="Language switch">
-      <button data-lang="en" class="active" aria-label="English">EN</button>
-      <button data-lang="zh" aria-label="中文">中</button>
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="container">
+      <div class="lang-toggle stagger stagger-1" role="group" aria-label="Language switch">
+        <button data-lang="en" class="active" aria-label="English">EN</button>
+        <button data-lang="zh" aria-label="中文">中</button>
+      </div>
+
+      <div class="hero-eyebrow stagger stagger-2">
+        <div class="diamond" aria-hidden="true"></div>
+        <span class="label" data-i18n="eyebrow">Secure Key Vault</span>
+      </div>
+
+      <h1 class="stagger stagger-3">API <span class="accent">Matrix</span></h1>
+
+      <div class="hero-divider stagger stagger-4" aria-hidden="true"></div>
+
+      <p class="hero-tagline stagger stagger-5" data-i18n="tagline">
+        Centrally manage, test, and track all your AI provider API keys.<br>
+        100% local storage, biometric-locked.
+      </p>
+
+      <div class="hero-links stagger stagger-6">
+        <a href="privacy.html">
+          <span data-i18n="linkPrivacy">Privacy Policy</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="support.html">
+          <span data-i18n="linkSupport">Support &amp; FAQ</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div class="hero-badges stagger stagger-6">
+        <span class="badge badge--accent" data-i18n="badgeBiometric">Biometric Lock</span>
+        <span class="badge" data-i18n="badgePlatforms">iOS + Android</span>
+        <span class="badge" data-i18n="badgeProviders">20+ Providers</span>
+        <span class="badge badge--accent" data-i18n="badgeLocal">Local Only</span>
+      </div>
     </div>
+  </section>
 
-    <div class="eyebrow">
-      <div class="eyebrow-diamond" aria-hidden="true"></div>
-      <span class="eyebrow-label" data-i18n="eyebrow">Secure Key Vault</span>
+  <!-- ═══ IPHONE SHOWCASE ═══ -->
+  <section class="showcase" id="showcase">
+    <div class="showcase-inner">
+
+      <!-- Phone (sticky) -->
+      <div class="showcase-phone" id="phoneSticky">
+        <svg viewBox="0 0 400 832" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- body shadow -->
+          <rect x="18" y="8" width="364" height="816" rx="54" fill="rgba(0,0,0,0.04)"/>
+          <!-- body frame - titanium gradient -->
+          <defs>
+            <linearGradient id="titanium" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#d4d2cc"/>
+              <stop offset="30%" stop-color="#e8e6df"/>
+              <stop offset="60%" stop-color="#c4c2bb"/>
+              <stop offset="100%" stop-color="#b8b6b0"/>
+            </linearGradient>
+            <linearGradient id="titaniumDark" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#3a3936"/>
+              <stop offset="50%" stop-color="#4a4945"/>
+              <stop offset="100%" stop-color="#2e2d2b"/>
+            </linearGradient>
+            <clipPath id="screenClip">
+              <rect x="28" y="24" width="344" height="784" rx="38"/>
+            </clipPath>
+          </defs>
+          <!-- frame -->
+          <rect x="20" y="10" width="360" height="812" rx="52" fill="url(#titanium)" stroke="#a09e98" stroke-width="0.5"/>
+          <!-- inner bezel -->
+          <rect x="26" y="22" width="348" height="788" rx="40" fill="#0a0a0a"/>
+          <!-- screen area -->
+          <rect x="28" y="24" width="344" height="784" rx="38" fill="#000"/>
+
+          <!-- screenshots (stacked, GSAP controls opacity) -->
+          <image href="images/screen-1.png" x="28" y="24" width="344" height="784" clip-path="url(#screenClip)" preserveAspectRatio="xMidYMid slice" class="scr scr-0"/>
+          <image href="images/screen-2.png" x="28" y="24" width="344" height="784" clip-path="url(#screenClip)" preserveAspectRatio="xMidYMid slice" class="scr scr-1"/>
+          <image href="images/screen-3.png" x="28" y="24" width="344" height="784" clip-path="url(#screenClip)" preserveAspectRatio="xMidYMid slice" class="scr scr-2"/>
+          <image href="images/screen-4.png" x="28" y="24" width="344" height="784" clip-path="url(#screenClip)" preserveAspectRatio="xMidYMid slice" class="scr scr-3"/>
+
+          <!-- Dynamic Island -->
+          <rect x="167" y="40" width="66" height="18" rx="9" fill="#0f0f0f"/>
+          <rect x="170" y="42" width="60" height="14" rx="7" fill="#1a1a1a"/>
+          <rect x="191" y="45" width="18" height="8" rx="4" fill="#2a2a2a" opacity="0.6"/>
+
+          <!-- side buttons -->
+          <rect x="10" y="180" width="10" height="60" rx="3" fill="url(#titanium)" stroke="#a09e98" stroke-width="0.3"/>
+          <rect x="10" y="260" width="10" height="50" rx="3" fill="url(#titanium)" stroke="#a09e98" stroke-width="0.3"/>
+          <rect x="10" y="330" width="10" height="50" rx="3" fill="url(#titanium)" stroke="#a09e98" stroke-width="0.3"/>
+          <rect x="380" y="210" width="10" height="80" rx="3" fill="url(#titanium)" stroke="#a09e98" stroke-width="0.3"/>
+
+          <!-- screen highlight -->
+          <rect x="28" y="24" width="344" height="784" rx="38" fill="url(#screenGlow)" opacity="0.3" pointer-events="none"/>
+          <defs>
+            <radialGradient id="screenGlow" cx="50%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.06)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </radialGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <!-- Text blocks -->
+      <div class="showcase-text">
+        <div class="text-step" data-step="0">
+          <span class="step-icon">&#x1F511;</span>
+          <span class="step-num" data-i18n="s1Label">Step 01</span>
+          <h2 data-i18n="s1Title">All Your Keys, One Place</h2>
+          <p data-i18n="s1Desc">Store and organize API keys from every major AI provider. No more scattered notes or config files.</p>
+        </div>
+
+        <div class="text-step" data-step="1">
+          <span class="step-icon">&#x26A1;</span>
+          <span class="step-num" data-i18n="s2Label">Step 02</span>
+          <h2 data-i18n="s2Title">Test With One Tap</h2>
+          <p data-i18n="s2Desc">Ping any provider to verify connectivity and latency. Know immediately if a key is valid or expired.</p>
+        </div>
+
+        <div class="text-step" data-step="2">
+          <span class="step-icon">&#x1F6E1;&#xFE0F;</span>
+          <span class="step-num" data-i18n="s3Label">Step 03</span>
+          <h2 data-i18n="s3Title">Biometrically Locked</h2>
+          <p data-i18n="s3Desc">Your keys never leave your device. Protected by Face ID, Touch ID, or Android biometrics.</p>
+        </div>
+
+        <div class="text-step" data-step="3">
+          <span class="step-icon">&#x1F4CA;</span>
+          <span class="step-num" data-i18n="s4Label">Step 04</span>
+          <h2 data-i18n="s4Title">Usage at a Glance</h2>
+          <p data-i18n="s4Desc">Track token consumption and spending across providers. Stay informed, never overshoot your budget.</p>
+        </div>
+      </div>
+
     </div>
+  </section>
 
-    <h1>API <span class="accent">Matrix</span></h1>
-
-    <div class="divider" aria-hidden="true"></div>
-
-    <p class="tagline" data-i18n="tagline">
-      Centrally manage, test, and track all your AI provider API keys.<br>
-      100% local storage, biometric-locked.
-    </p>
-
-    <nav class="links">
-      <a href="privacy.html">
-        <span data-i18n="linkPrivacy">Privacy Policy</span>
-        <span class="arrow" aria-hidden="true">→</span>
-      </a>
-      <a href="support.html">
-        <span data-i18n="linkSupport">Support &amp; FAQ</span>
-        <span class="arrow" aria-hidden="true">→</span>
-      </a>
-    </nav>
-
-    <div class="badges">
-      <span class="badge badge--accent" data-i18n="badgeBiometric">Biometric Lock</span>
-      <span class="badge" data-i18n="badgePlatforms">iOS + Android</span>
-      <span class="badge" data-i18n="badgeProviders">20+ Providers</span>
-      <span class="badge badge--accent" data-i18n="badgeLocal">Local Only</span>
-    </div>
-
-    <footer>
-      <span data-i18n="footer">&copy; 2026 API Matrix. All rights reserved.</span>
-    </footer>
+  <div class="footer">
+    <span data-i18n="footer">&copy; 2026 API Matrix. All rights reserved.</span>
   </div>
 
   <script>
+    // ── i18n ──
     const i18n = {
       en: {
         title: 'API Matrix \u00B7 Secure Key Vault',
@@ -331,6 +462,18 @@
         badgePlatforms: 'iOS + Android',
         badgeProviders: '20+ Providers',
         badgeLocal: 'Local Only',
+        s1Label: 'Step 01',
+        s1Title: 'All Your Keys, One Place',
+        s1Desc: 'Store and organize API keys from every major AI provider. No more scattered notes or config files.',
+        s2Label: 'Step 02',
+        s2Title: 'Test With One Tap',
+        s2Desc: 'Ping any provider to verify connectivity and latency. Know immediately if a key is valid or expired.',
+        s3Label: 'Step 03',
+        s3Title: 'Biometrically Locked',
+        s3Desc: 'Your keys never leave your device. Protected by Face ID, Touch ID, or Android biometrics.',
+        s4Label: 'Step 04',
+        s4Title: 'Usage at a Glance',
+        s4Desc: 'Track token consumption and spending across providers. Stay informed, never overshoot your budget.',
         footer: '\u00A9 2026 API Matrix. All rights reserved.'
       },
       zh: {
@@ -343,6 +486,18 @@
         badgePlatforms: 'iOS + Android',
         badgeProviders: '20+ \u4F9B\u61C9\u5546',
         badgeLocal: '\u50C5\u9650\u672C\u5730',
+        s1Label: '\u7B2C\u4E00\u6B65',
+        s1Title: '\u6240\u6709\u91D1\u9470\uFF0C\u4E00\u5C4B\u6536\u7D0D',
+        s1Desc: '\u5B58\u653E\u548C\u7BA1\u7406\u6240\u6709\u4E3B\u8981 AI \u4F9B\u61C9\u5546\u7684 API \u91D1\u9470\u3002\u518D\u4E5F\u4E0D\u7528\u5C0B\u627E\u96F6\u6563\u7684\u7B46\u8A18\u6216\u914D\u7F6E\u6A94\u3002',
+        s2Label: '\u7B2C\u4E8C\u6B65',
+        s2Title: '\u4E00\u9EDE\u5373\u6E2C',
+        s2Desc: 'Ping \u4EFB\u4F55\u4F9B\u61C9\u5546\u4EE5\u9A57\u8B49\u9023\u7DDA\u72C0\u614B\u548C\u5EF6\u9072\u3002\u7ACB\u5373\u77E5\u9053\u91D1\u9470\u662F\u5426\u6709\u6548\u6216\u5DF2\u904E\u671F\u3002',
+        s3Label: '\u7B2C\u4E09\u6B65',
+        s3Title: '\u751F\u7269\u8FA8\u8B58\u9396\u5B9A',
+        s3Desc: '\u60A8\u7684\u91D1\u9470\u5F9E\u4E0D\u96E2\u958B\u60A8\u7684\u88DD\u7F6E\u3002\u7531 Face ID\u3001Touch ID \u6216 Android \u751F\u7269\u8FA8\u8B58\u6280\u8853\u4FDD\u8B77\u3002',
+        s4Label: '\u7B2C\u56DB\u6B65',
+        s4Title: '\u4F7F\u7528\u6982\u89BD',
+        s4Desc: '\u8FFD\u8E64\u5404\u4F9B\u61C9\u5546\u7684 Token \u6D88\u8017\u548C\u652F\u51FA\u3002\u4E86\u89E3\u72C0\u6CC1\uFF0C\u7D55\u4E0D\u8D85\u51FA\u9810\u7B97\u3002',
         footer: '\u00A9 2026 API Matrix. \u7248\u6B0A\u6240\u6709\u3002'
       }
     };
@@ -370,6 +525,62 @@
     });
 
     applyLang(currentLang);
+
+    // ── GSAP ScrollTrigger ──
+    gsap.registerPlugin(ScrollTrigger);
+
+    const screens = gsap.utils.toArray('.scr');
+    const steps = gsap.utils.toArray('.text-step');
+    const total = screens.length;
+
+    if (screens.length && window.innerWidth > 1024) {
+      // Set initial state: first screen visible, rest hidden
+      gsap.set(screens, { autoAlpha: 0 });
+      gsap.set(screens[0], { autoAlpha: 1 });
+
+      // Pin the phone and animate screenshots
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '#showcase',
+          start: 'top top',
+          end: '+=400%',
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
+        defaults: { ease: 'none', duration: 1 / total },
+      });
+
+      for (let i = 0; i < total; i++) {
+        if (i > 0) {
+          tl.to(screens[i - 1], { autoAlpha: 0 })
+            .to(screens[i], { autoAlpha: 1 }, '<');
+        }
+      }
+
+      // text step highlighting
+      steps.forEach((step, i) => {
+        gsap.fromTo(
+          step,
+          { autoAlpha: 0.25, y: 20 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.3,
+            ease: 'power1.out',
+            scrollTrigger: {
+              trigger: step,
+              start: 'top 60%',
+              end: 'top 20%',
+              toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
+      });
+    }
+
+    // Refresh ScrollTrigger on load to prevent layout shift
+    window.addEventListener('load', () => ScrollTrigger.refresh());
   </script>
 
 </body>
