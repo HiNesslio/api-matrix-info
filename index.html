@@ -3,24 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="title">API Matrix — Secure Key Vault</title>
+  <title data-i18n="title">API Matrix &middot; Secure Key Vault</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #06060e;
-      --surface: rgba(255, 255, 255, 0.035);
-      --surface-border: rgba(255, 255, 255, 0.07);
-      --text-primary: #ededf5;
-      --text-secondary: #8a8a9e;
-      --accent-cyan: #00d4ff;
-      --accent-emerald: #00ff94;
-      --radius: 20px;
-      --font-display: 'Syne', sans-serif;
+      --bg: #f5f4ef;
+      --surface: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #6b6a66;
+      --text-tertiary: #9c9b97;
+      --accent: #1a3a6b;
+      --accent-light: rgba(26, 58, 107, 0.06);
+      --accent-border: rgba(26, 58, 107, 0.12);
+      --border: rgba(0, 0, 0, 0.06);
+      --radius: 10px;
+      --font-display: 'Bricolage Grotesque', sans-serif;
       --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
     }
 
     html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
@@ -29,382 +32,318 @@
       font-family: var(--font-body);
       background: var(--bg);
       color: var(--text-primary);
-      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       align-items: center;
-      justify-content: center;
-      overflow-x: hidden;
       position: relative;
     }
 
-    .grid {
+    /* decorative M mark */
+    .mark {
       position: fixed;
-      inset: 0;
+      right: -40px;
+      top: 50%;
+      transform: translateY(-50%);
       z-index: 0;
       pointer-events: none;
-      background-image:
-        radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
-      background-size: 40px 40px;
-      animation: gridDrift 60s linear infinite;
-    }
-    @keyframes gridDrift {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(40px, 40px); }
-    }
-
-    .glow {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(100px);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .glow--cyan {
-      width: 500px; height: 500px;
-      background: rgba(0, 212, 255, 0.08);
-      top: -200px; right: -150px;
-      animation: floatGlow 12s ease-in-out infinite alternate;
-    }
-    .glow--emerald {
-      width: 400px; height: 400px;
-      background: rgba(0, 255, 148, 0.06);
-      bottom: -150px; left: -100px;
-      animation: floatGlow 16s ease-in-out infinite alternate-reverse;
-    }
-    @keyframes floatGlow {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(60px, -40px) scale(1.15); }
-    }
-
-    .noise {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0.025;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 200px 200px;
-    }
-
-    main {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      max-width: 520px;
-      padding: 24px;
-    }
-
-    .card {
-      background: var(--surface);
-      backdrop-filter: blur(24px) saturate(1.2);
-      -webkit-backdrop-filter: blur(24px) saturate(1.2);
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius);
-      padding: 56px 48px 48px;
-      position: relative;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(24px);
-      animation: cardIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
-    }
-    .card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), transparent 40%, transparent 60%, rgba(0, 255, 148, 0.15));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-    }
-    @keyframes cardIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 28px;
-      opacity: 0;
-      animation: fadeUp 0.6s ease 0.35s forwards;
-    }
-    .logo-diamond {
-      width: 10px;
-      height: 10px;
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-emerald));
-      transform: rotate(45deg);
-      border-radius: 2px;
-      flex-shrink: 0;
-    }
-    .logo-label {
+      user-select: none;
       font-family: var(--font-display);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-    }
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    h1 {
-      font-family: var(--font-display);
-      font-size: clamp(36px, 7vw, 52px);
       font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #ededf5 0%, #a0a0c0 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      opacity: 0;
-      animation: fadeUp 0.6s ease 0.45s forwards;
-    }
-    h1 .highlight {
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-emerald));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-size: clamp(300px, 40vw, 640px);
+      line-height: 1;
+      color: rgba(26, 58, 107, 0.035);
+      letter-spacing: -0.06em;
     }
 
-    .divider {
-      width: 48px;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-emerald));
-      border-radius: 2px;
-      margin: 24px 0;
-      opacity: 0;
-      animation: fadeUp 0.6s ease 0.55s forwards;
-    }
-
-    .tagline {
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--text-secondary);
-      max-width: 420px;
-      opacity: 0;
-      animation: fadeUp 0.6s ease 0.65s forwards;
-    }
-
-    .links {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 36px;
-      opacity: 0;
-      animation: fadeUp 0.6s ease 0.8s forwards;
-    }
-    .links a {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 20px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      color: var(--text-primary);
-      text-decoration: none;
-      font-size: 15px;
-      font-weight: 500;
-      font-family: var(--font-body);
-      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-      position: relative;
-      overflow: hidden;
-    }
-    .links a::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(0, 255, 148, 0.04));
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .links a:hover {
-      border-color: rgba(0, 212, 255, 0.2);
-      transform: translateY(-1px);
-    }
-    .links a:hover::before {
-      opacity: 1;
-    }
-    .links a:active {
-      transform: translateY(0);
-    }
-    .links a span {
+    .container {
       position: relative;
       z-index: 1;
-    }
-    .links a .arrow {
-      position: relative;
-      z-index: 1;
-      font-size: 18px;
-      color: var(--text-secondary);
-      transition: transform 0.3s ease, color 0.3s ease;
-    }
-    .links a:hover .arrow {
-      transform: translateX(4px);
-      color: var(--accent-cyan);
-    }
-
-    .badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 32px;
+      width: 100%;
+      max-width: 600px;
+      padding: 48px 40px;
+      margin: 0 auto 0 10vw;
       opacity: 0;
-      animation: fadeUp 0.6s ease 0.9s forwards;
+      animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
     }
-    .badge {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      padding: 6px 12px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      color: var(--text-secondary);
-    }
-    .badge--accent {
-      background: rgba(0, 212, 255, 0.08);
-      border-color: rgba(0, 212, 255, 0.15);
-      color: var(--accent-cyan);
-    }
-
-    footer {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 12px;
-      color: rgba(138, 138, 158, 0.5);
-      opacity: 0;
-      animation: fadeUp 0.6s ease 1s forwards;
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
 
     .lang-toggle {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 100;
       display: flex;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      padding: 3px;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      gap: 2px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2px;
+      width: fit-content;
+      margin-bottom: 56px;
       opacity: 0;
-      animation: fadeUp 0.6s ease 0.2s forwards;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
     }
     .lang-toggle button {
       background: none;
       border: none;
-      color: var(--text-secondary);
-      font-family: var(--font-display);
-      font-size: 12px;
-      font-weight: 700;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
       letter-spacing: 0.05em;
-      padding: 6px 12px;
-      border-radius: 7px;
+      padding: 5px 10px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
     }
     .lang-toggle button.active {
-      background: rgba(0, 212, 255, 0.15);
-      color: var(--accent-cyan);
+      background: var(--accent-light);
+      color: var(--accent);
     }
     .lang-toggle button:not(.active):hover {
       color: var(--text-primary);
     }
 
-    @media (max-width: 540px) {
-      .card { padding: 40px 28px 36px; }
-      h1 { font-size: 32px; }
-      .links a { padding: 14px 16px; font-size: 14px; }
-      .lang-toggle { top: 12px; right: 12px; }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+    }
+    .eyebrow-diamond {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      transform: rotate(45deg);
+      border-radius: 1.5px;
+      flex-shrink: 0;
+    }
+    .eyebrow-label {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 7vw, 60px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+    }
+    h1 .accent {
+      color: var(--accent);
+    }
+
+    .divider {
+      width: 36px;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+    }
+
+    .tagline {
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      max-width: 440px;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+    }
+
+    .links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards;
+    }
+    .links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: var(--font-body);
+      transition: all 0.25s ease;
+    }
+    .links a:hover {
+      border-color: var(--accent-border);
+      background: var(--accent-light);
+    }
+    .links a:active {
+      transform: scale(0.97);
+    }
+    .links a .arrow {
+      font-size: 16px;
+      color: var(--text-tertiary);
+      transition: transform 0.25s ease;
+    }
+    .links a:hover .arrow {
+      transform: translateX(3px);
+      color: var(--accent);
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      opacity: 0;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+    }
+    .badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .badge--accent {
+      background: var(--accent-light);
+      border-color: var(--accent-border);
+      color: var(--accent);
+    }
+
+    footer {
+      margin-top: 56px;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      opacity: 0;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      body { align-items: flex-start; padding-top: 48px; }
+      .container { margin: 0 auto; padding: 0 24px; }
+      .mark { display: none; }
+      .lang-toggle { margin-bottom: 40px; }
+      h1 { font-size: 34px; }
+      .tagline { font-size: 15px; }
+      footer { margin-top: 40px; }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #141312;
+        --surface: #1c1b1a;
+        --text-primary: #e8e6e1;
+        --text-secondary: #9c9a94;
+        --text-tertiary: #6b6a66;
+        --accent: #7a9fd4;
+        --accent-light: rgba(122, 159, 212, 0.1);
+        --accent-border: rgba(122, 159, 212, 0.2);
+        --border: rgba(255, 255, 255, 0.06);
+      }
+      .mark { color: rgba(122, 159, 212, 0.04); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .container, .lang-toggle, .eyebrow, h1, .divider, .tagline, .links, .badges, footer {
+        opacity: 1;
+        animation: none;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="grid" aria-hidden="true"></div>
-  <div class="glow glow--cyan" aria-hidden="true"></div>
-  <div class="glow glow--emerald" aria-hidden="true"></div>
-  <div class="noise" aria-hidden="true"></div>
+  <div class="mark" aria-hidden="true">M</div>
 
-  <div class="lang-toggle" role="group" aria-label="Language switch">
-    <button data-lang="en" class="active" aria-label="English">EN</button>
-    <button data-lang="zh" aria-label="中文">中</button>
-  </div>
+  <div class="container">
+    <div class="lang-toggle" role="group" aria-label="Language switch">
+      <button data-lang="en" class="active" aria-label="English">EN</button>
+      <button data-lang="zh" aria-label="中文">中</button>
+    </div>
 
-  <main>
-    <div class="card">
-      <div class="logo">
-        <div class="logo-diamond" aria-hidden="true"></div>
-        <span class="logo-label" data-i18n="logoLabel">SECURE KEY VAULT</span>
-      </div>
+    <div class="eyebrow">
+      <div class="eyebrow-diamond" aria-hidden="true"></div>
+      <span class="eyebrow-label" data-i18n="eyebrow">Secure Key Vault</span>
+    </div>
 
-      <h1>API <span class="highlight">Matrix</span></h1>
+    <h1>API <span class="accent">Matrix</span></h1>
 
-      <div class="divider" aria-hidden="true"></div>
+    <div class="divider" aria-hidden="true"></div>
 
-      <p class="tagline" data-i18n="tagline">
-        Centrally manage, test, and track all your AI provider API keys&nbsp;—<br>
-        100% local storage, biometric-locked.
-      </p>
+    <p class="tagline" data-i18n="tagline">
+      Centrally manage, test, and track all your AI provider API keys.<br>
+      100% local storage, biometric-locked.
+    </p>
 
-      <nav class="links">
-        <a href="privacy.html">
-          <span data-i18n="linkPrivacy">Privacy Policy</span>
-          <span class="arrow" aria-hidden="true">→</span>
-        </a>
-        <a href="support.html">
-          <span data-i18n="linkSupport">Support &amp; FAQ</span>
-          <span class="arrow" aria-hidden="true">→</span>
-        </a>
-      </nav>
+    <nav class="links">
+      <a href="privacy.html">
+        <span data-i18n="linkPrivacy">Privacy Policy</span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+      <a href="support.html">
+        <span data-i18n="linkSupport">Support &amp; FAQ</span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </nav>
 
-      <div class="badge-row">
-        <span class="badge badge--accent" data-i18n="badgeBiometric">🔒 Biometric Lock</span>
-        <span class="badge" data-i18n="badgePlatforms">📱 iOS + Android</span>
-        <span class="badge" data-i18n="badgeProviders">🤖 20+ Providers</span>
-        <span class="badge badge--accent" data-i18n="badgeLocal">⚡ Local Only</span>
-      </div>
+    <div class="badges">
+      <span class="badge badge--accent" data-i18n="badgeBiometric">Biometric Lock</span>
+      <span class="badge" data-i18n="badgePlatforms">iOS + Android</span>
+      <span class="badge" data-i18n="badgeProviders">20+ Providers</span>
+      <span class="badge badge--accent" data-i18n="badgeLocal">Local Only</span>
     </div>
 
     <footer>
       <span data-i18n="footer">&copy; 2026 API Matrix. All rights reserved.</span>
     </footer>
-  </main>
+  </div>
 
   <script>
     const i18n = {
       en: {
-        title: 'API Matrix — Secure Key Vault',
-        logoLabel: 'SECURE KEY VAULT',
-        tagline: 'Centrally manage, test, and track all your AI provider API keys&nbsp;—<br>100% local storage, biometric-locked.',
+        title: 'API Matrix \u00B7 Secure Key Vault',
+        eyebrow: 'Secure Key Vault',
+        tagline: 'Centrally manage, test, and track all your AI provider API keys.<br>100% local storage, biometric-locked.',
         linkPrivacy: 'Privacy Policy',
         linkSupport: 'Support &amp; FAQ',
-        badgeBiometric: '\u{1F512} Biometric Lock',
-        badgePlatforms: '\u{1F4F1} iOS + Android',
-        badgeProviders: '\u{1F916} 20+ Providers',
-        badgeLocal: '\u26A1 Local Only',
+        badgeBiometric: 'Biometric Lock',
+        badgePlatforms: 'iOS + Android',
+        badgeProviders: '20+ Providers',
+        badgeLocal: 'Local Only',
         footer: '\u00A9 2026 API Matrix. All rights reserved.'
       },
       zh: {
-        title: 'API Matrix — 安全金鑰保管庫',
-        logoLabel: '安全金鑰保管庫',
-        tagline: '集中管理、測試和追蹤所有 AI 供應商的 API 金鑰&nbsp;—<br>100% 本地儲存，生物辨識鎖定。',
-        linkPrivacy: '隱私權政策',
-        linkSupport: '支援與常見問題',
-        badgeBiometric: '\u{1F512} 生物辨識鎖定',
-        badgePlatforms: '\u{1F4F1} iOS + Android',
-        badgeProviders: '\u{1F916} 20+ 供應商',
-        badgeLocal: '\u26A1 僅限本地',
-        footer: '\u00A9 2026 API Matrix. 版權所有。'
+        title: 'API Matrix \u00B7 \u5B89\u5168\u91D1\u9470\u4FDD\u7BA1\u5EAB',
+        eyebrow: '\u5B89\u5168\u91D1\u9470\u4FDD\u7BA1\u5EAB',
+        tagline: '\u96C6\u4E2D\u7BA1\u7406\u3001\u6E2C\u8A66\u548C\u8FFD\u8E64\u6240\u6709 AI \u4F9B\u61C9\u5546\u7684 API \u91D1\u9470\u3002<br>100% \u672C\u5730\u5132\u5B58\uFF0C\u751F\u7269\u8FA8\u8B58\u9396\u5B9A\u3002',
+        linkPrivacy: '\u96B1\u79C1\u6B0A\u653F\u7B56',
+        linkSupport: '\u652F\u63F4\u8207\u5E38\u898B\u554F\u984C',
+        badgeBiometric: '\u751F\u7269\u8FA8\u8B58\u9396\u5B9A',
+        badgePlatforms: 'iOS + Android',
+        badgeProviders: '20+ \u4F9B\u61C9\u5546',
+        badgeLocal: '\u50C5\u9650\u672C\u5730',
+        footer: '\u00A9 2026 API Matrix. \u7248\u6B0A\u6240\u6709\u3002'
       }
     };
 
