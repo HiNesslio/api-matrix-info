@@ -160,8 +160,8 @@
       background: var(--bg);
     }
     .showcase-inner {
-      display: grid;
-      grid-template-columns: 380px 1fr;
+      display: flex;
+      align-items: flex-start;
       gap: 80px;
       max-width: 1280px;
       margin: 0 auto;
@@ -169,11 +169,10 @@
       position: relative;
     }
     .showcase-phone {
-      width: 380px;
+      flex: 0 0 380px;
       position: sticky;
       top: 50%;
       transform: translateY(-50%);
-      z-index: 2;
     }
     .showcase-phone svg {
       display: block;
@@ -182,10 +181,9 @@
     }
 
     .showcase-text {
-      min-width: 0;
+      flex: 1 1 0;
+      min-width: 420px;
       padding: 60vh 0;
-      position: relative;
-      z-index: 1;
     }
     .text-step {
       min-height: 80vh;
@@ -283,13 +281,8 @@
         --accent-light: rgba(122, 159, 212, 0.1);
         --accent-border: rgba(122, 159, 212, 0.2);
         --border: rgba(255, 255, 255, 0.06);
-        --ti-0: #3a3936;
-        --ti-30: #4a4945;
-        --ti-60: #3a3936;
-        --ti-100: #2e2d2b;
       }
-      .showcase-phone .frame { stroke: #1c1b1a; }
-      .showcase-phone .btn { stroke: #1c1b1a; }
+      .showcase-phone svg { filter: brightness(0.7); }
       .mark { color: rgba(122, 159, 212, 0.04); }
     }
     @media (prefers-reduced-motion: reduce) {
@@ -355,10 +348,10 @@
           <!-- body frame - titanium gradient -->
           <defs>
             <linearGradient id="titanium" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="var(--ti-0, #d4d2cc)"/>
-              <stop offset="30%" stop-color="var(--ti-30, #e8e6df)"/>
-              <stop offset="60%" stop-color="var(--ti-60, #c4c2bb)"/>
-              <stop offset="100%" stop-color="var(--ti-100, #b8b6b0)"/>
+              <stop offset="0%" stop-color="#d4d2cc"/>
+              <stop offset="30%" stop-color="#e8e6df"/>
+              <stop offset="60%" stop-color="#c4c2bb"/>
+              <stop offset="100%" stop-color="#b8b6b0"/>
             </linearGradient>
             <clipPath id="screenClip">
               <rect x="28" y="24" width="344" height="784" rx="38"/>
@@ -522,18 +515,21 @@
     const steps = gsap.utils.toArray('.text-step');
     const total = screens.length;
 
+    let showcaseInit = false;
+
     function initShowcase() {
-      if (window.innerWidth <= 1024) return;
+      if (showcaseInit) return;
+      if (window.innerWidth <= 1024 || !screens.length) return;
       if (reduceMotion) {
-        gsap.set(screens, { autoAlpha: 1 });
+        gsap.set(screens, { opacity: 1 });
         return;
       }
 
-      // Set initial state: first screen visible, rest hidden
-      gsap.set(screens, { autoAlpha: 0 });
-      gsap.set(screens[0], { autoAlpha: 1 });
+      showcaseInit = true;
 
-      // Brief pause on first screenshot before transitions begin
+      gsap.set(screens, { opacity: 0 });
+      gsap.set(screens[0], { opacity: 1 });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: '#showcase',
@@ -547,45 +543,16 @@
       });
 
       tl.to({}, { duration: 0.15 });
-      for (let i = 0; i < total; i++) {
-        if (i > 0) {
-          tl.to(screens[i - 1], { autoAlpha: 0 })
-            .to(screens[i], { autoAlpha: 1 }, '<');
-        }
+      for (let i = 1; i < total; i++) {
+        tl.to(screens[i - 1], { opacity: 0 })
+          .to(screens[i], { opacity: 1 }, '<');
       }
-
-      // text step highlighting
-      steps.forEach((step) => {
-        gsap.fromTo(
-          step,
-          { autoAlpha: 0.25, y: 20 },
-          {
-            autoAlpha: 1,
-            y: 0,
-            duration: 0.3,
-            ease: 'power1.out',
-            scrollTrigger: {
-              trigger: step,
-              start: 'top 60%',
-              end: 'top 20%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-      });
     }
 
-    // Match media for responsive toggle
-    const mq = window.matchMedia('(min-width: 1025px)');
-    mq.addEventListener('change', () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
+    window.addEventListener('load', () => {
       initShowcase();
+      ScrollTrigger.refresh();
     });
-
-    initShowcase();
-
-    // Refresh ScrollTrigger on load to prevent layout shift
-    window.addEventListener('load', () => ScrollTrigger.refresh());
   </script>
 
 </body>
