@@ -184,16 +184,16 @@
     .showcase-text {
       max-width: 580px;
       margin: 0 auto;
-      padding: 60vh 0 10vh;
+      padding: 40vh 0 6vh;
     }
     .text-step {
-      min-height: 60vh;
+      min-height: 40vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 24px 0;
+      padding: 16px 0;
     }
-    .text-step:last-child { min-height: 40vh; }
+    .text-step:last-child { min-height: 30vh; }
     .text-step .step-num {
       font-family: var(--font-mono);
       font-size: 11px;
@@ -534,16 +534,16 @@
         defaults: { ease: 'none' },
       });
 
-      tl.to({}, { duration: 0.10 });
+      tl.to({}, { duration: 0.13 });
       tl.fromTo(phone, { opacity: 0 }, { opacity: 1, duration: 0.10 });
-      tl.to(screens[0], { opacity: 0, duration: 0.22 })
+      tl.to(screens[0], { opacity: 0, duration: 0.20 })
         .to(screens[1], { opacity: 1, duration: 0 }, '<');
-      tl.to(screens[1], { opacity: 0, duration: 0.22 })
+      tl.to(screens[1], { opacity: 0, duration: 0.20 })
         .to(screens[2], { opacity: 1, duration: 0 }, '<');
-      tl.to(screens[2], { opacity: 0, duration: 0.22 })
+      tl.to(screens[2], { opacity: 0, duration: 0.20 })
         .to(screens[3], { opacity: 1, duration: 0 }, '<');
       tl.to({}, { duration: 0.05 });
-      tl.to(phone, { opacity: 0, duration: 0.09 });
+      tl.to(phone, { opacity: 0, duration: 0.12 });
     }
 
     window.addEventListener('load', () => ScrollTrigger.refresh());
