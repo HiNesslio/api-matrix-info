@@ -154,25 +154,31 @@
     }
     .hero-badges .badge--accent { background: var(--accent-light); border-color: var(--accent-border); color: var(--accent); }
 
-    /* ── Showcase ── */
-    .showcase {
-      position: relative;
-      background: var(--bg);
+    /* ── Phone overlay (fixed, outside pinned section) ── */
+    .phone-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
     }
     .showcase-phone {
-      position: fixed;
+      position: absolute;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%) scale(0.7);
       width: 380px;
-      z-index: 3;
       opacity: 0;
-      pointer-events: none;
     }
     .showcase-phone svg {
       display: block;
       width: 100%;
       height: auto;
+    }
+
+    /* ── Showcase ── */
+    .showcase {
+      position: relative;
+      background: var(--bg);
     }
 
     .showcase-text {
@@ -242,13 +248,20 @@
     }
 
     @media (max-width: 1024px) {
+      .phone-overlay {
+        position: relative;
+        inset: auto;
+        z-index: auto;
+        pointer-events: auto;
+        display: flex;
+        justify-content: center;
+      }
       .showcase-phone {
         position: relative;
         left: auto;
         top: auto;
         transform: none;
         width: 300px;
-        margin: 60px auto 0;
         opacity: 1;
       }
       .showcase-text { padding: 40px 24px; }
@@ -331,11 +344,10 @@
     </div>
   </section>
 
-  <!-- ═══ IPHONE SHOWCASE ═══ -->
-  <section class="showcase" id="showcase">
-
-      <div class="showcase-phone">
-        <svg viewBox="0 0 400 832" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- ═══ PHONE OVERLAY (fixed, outside pinned section) ═══ -->
+  <div class="phone-overlay">
+    <div class="showcase-phone">
+      <svg viewBox="0 0 400 832" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- body shadow -->
           <rect x="18" y="8" width="364" height="816" rx="54" fill="rgba(0,0,0,0.04)"/>
           <!-- body frame - titanium gradient -->
@@ -384,7 +396,9 @@
           </defs>
         </svg>
       </div>
+    </div>
 
+  <section class="showcase" id="showcase">
       <div class="showcase-text">
         <div class="text-step" data-step="0">
           <span class="step-icon">&#x1F511;</span>
@@ -501,52 +515,36 @@
     gsap.registerPlugin(ScrollTrigger);
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const phoneWrap = document.querySelector('.showcase-phone');
+    const phone = document.querySelector('.showcase-phone');
     const screens = gsap.utils.toArray('.scr');
 
-    let showcaseInit = false;
-
-    function initShowcase() {
-      if (showcaseInit) return;
-      if (window.innerWidth <= 1024 || !screens.length) return;
-
-      showcaseInit = true;
-
+    if (!reduceMotion && window.innerWidth > 1024 && screens.length && phone) {
       gsap.set(screens, { opacity: 0 });
       gsap.set(screens[0], { opacity: 1 });
-
-      if (reduceMotion) {
-        gsap.set(phoneWrap, { opacity: 1 });
-        return;
-      }
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: '#showcase',
-          start: 'top top',
-          end: '+=450%',
+          start: 'top bottom',
+          end: '+=350%',
           pin: true,
           scrub: 1,
           invalidateOnRefresh: true,
-          anticipatePin: 1,
         },
         defaults: { ease: 'none' },
       });
 
-      tl.fromTo(phoneWrap, { opacity: 0 }, { opacity: 1, duration: 0.12 });
+      tl.fromTo(phone, { opacity: 0 }, { opacity: 1, duration: 0.15 });
       tl.to(screens[0], { opacity: 0, duration: 0.25 })
         .to(screens[1], { opacity: 1, duration: 0 }, '<');
       tl.to(screens[1], { opacity: 0, duration: 0.25 })
         .to(screens[2], { opacity: 1, duration: 0 }, '<');
       tl.to(screens[2], { opacity: 0, duration: 0.25 })
         .to(screens[3], { opacity: 1, duration: 0 }, '<');
-      tl.to(phoneWrap, { opacity: 0, duration: 0.13 });
+      tl.to(phone, { opacity: 0, duration: 0.15 });
     }
 
-    window.addEventListener('load', () => {
-      initShowcase();
-      ScrollTrigger.refresh();
-    });
+    window.addEventListener('load', () => ScrollTrigger.refresh());
   </script>
 
 </body>
