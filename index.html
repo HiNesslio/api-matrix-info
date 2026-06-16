@@ -266,6 +266,7 @@
         width: 300px;
         opacity: 1;
       }
+      .scr { transition: opacity 0.6s ease; }
       .showcase-text { padding: 40px 24px; }
       .text-step { min-height: auto; padding: 40px 0; }
       .text-step:last-child { min-height: auto; }
@@ -549,6 +550,19 @@
     }
 
     window.addEventListener('load', () => ScrollTrigger.refresh());
+
+    // ── Mobile auto-slideshow ──
+    if (window.innerWidth <= 1024 && screens.length > 1) {
+      let idx = 0;
+      let dir = 1;
+      const total = screens.length;
+      setInterval(() => {
+        screens[idx].style.opacity = '0';
+        idx += dir;
+        if (idx === total - 1 || idx === 0) dir *= -1;
+        screens[idx].style.opacity = '1';
+      }, 3000);
+    }
   </script>
 
 </body>
